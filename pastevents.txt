@@ -1,0 +1,36 @@
+ls
+cleaer
+clear
+peek
+ls
+clear
+proclore
+peek
+clear
+peek -a
+clear
+peek -la
+clear
+warp
+[A
+clear
+ls
+clear
+mkdir temp_dir
+warp 
+warp temp_dir
+ls
+clear
+pwd
+warp
+ls
+clear
+ls
+clear
+ls
+clear
+ls
+clear
+peek
+ls
+clear
