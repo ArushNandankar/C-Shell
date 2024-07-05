@@ -1,7 +1,6 @@
 #include "headers.h"
 
-void execute_command_hasio(char *command, int background, char *home_directory, char *current_directory, char *last_directory, char *last_directory_temp, char *previous_command, char *pepath, char *input_copy, int *time)
-{
+void execute_command_hasio(char *command, int background, char *home_directory, char *current_directory, char *last_directory, char *last_directory_temp, char *previous_command, char *pepath, char *input_copy, int *time) {
     // case 1 : a > b
     // case 2 : a >> b
     // case 3 : a < b
@@ -17,24 +16,17 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
     char flag[256] = "\0"; // 1 for > // 2 for >> // 3 for <
 
     int idx = 0;
-    while (command[idx] != '\0')
-    {
-        if (command[idx] == '>')
-        {
-            if (command[idx + 1] == '>')
-            {
+    while (command[idx] != '\0') {
+        if (command[idx] == '>') {
+            if (command[idx + 1] == '>') {
                 count2++;
                 strcat(flag, "2");
                 idx++;
-            }
-            else
-            {
+            } else {
                 count1++;
                 strcat(flag, "1");
             }
-        }
-        else if (command[idx] == '<')
-        {
+        } else if (command[idx] == '<') {
             count3++;
             strcat(flag, "3");
         }
@@ -43,14 +35,10 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
     // printf("%s\n", flag);
 
-    if(strcmp(flag, "\0") == 0)
-    {
+    if(strcmp(flag, "\0") == 0) {
         // No IO redirection
         execute_command(command, background, home_directory, current_directory, last_directory, last_directory_temp, previous_command, pepath, input_copy, time);
-    }
-
-    else if (strcmp(flag, "1") == 0)
-    {
+    } else if (strcmp(flag, "1") == 0) {
         // Case 1: a > b
         char *token = strtok(command, ">");
         char *executable = token;
@@ -65,20 +53,15 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
         pid_t pid = fork();
 
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("Forking error");
             exit(1);
-        }
-
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             // Child process
             int original_stdout = dup(STDOUT_FILENO); // Save the original stdout
 
             int fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd < 0)
-            {
+            if (fd < 0) {
                 perror("Error opening file");
                 return;
             }
@@ -95,17 +78,12 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
             close(fd2);
 
             exit(0);
-        }
-
-        else
-        {
+        } else {
             // Parent process
             int status;
             waitpid(pid, &status, 0);
         }
-    }
-    else if (strcmp(flag, "2") == 0)
-    {
+    } else if (strcmp(flag, "2") == 0) {
         // Case 2: a >> b
         char *token = strtok(command, ">>");
         char *executable = token;
@@ -120,20 +98,15 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
         pid_t pid = fork();
 
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("Forking error");
             exit(1);
-        }
-
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             // Child process
             int original_stdout = dup(STDOUT_FILENO); // Save the original stdout
 
             int fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd < 0)
-            {
+            if (fd < 0) {
                 perror("Error opening file");
                 return;
             }
@@ -150,17 +123,12 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
             close(fd2);
 
             exit(0);
-        }
-
-        else
-        {
+        } else {
             // Parent process
             int status;
             waitpid(pid, &status, 0);
         }
-    }
-    else if (strcmp(flag, "3") == 0)
-    {
+    } else if (strcmp(flag, "3") == 0) {
         // Case 3: a < b
         char *token = strtok(command, "<");
         char *executable = token;
@@ -175,20 +143,15 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
         pid_t pid = fork();
 
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("Forking error");
             exit(1);
-        }
-
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             // Child process
             int original_stdin = dup(STDIN_FILENO); // Save the original stdout
 
             int fd = open(input_file, O_RDONLY);
-            if (fd < 0)
-            {
+            if (fd < 0) {
                 perror("Error opening file");
                 return;
             }
@@ -205,17 +168,12 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
             close(fd2);
 
             exit(0);
-        }
-
-        else
-        {
+        } else {
             // Parent process
             int status;
             waitpid(pid, &status, 0);
         }
-    }
-    else if (strcmp(flag, "31") == 0)
-    {
+    } else if (strcmp(flag, "31") == 0) {
         // Case 31: a < b > c
         char *token = strtok(command, "<");
         char *executable = token;
@@ -235,27 +193,21 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
         pid_t pid = fork();
 
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("Forking error");
             exit(1);
-        }
-
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             // Child process
             int original_stdin = dup(STDIN_FILENO); // Save the original stdout
             int original_stdout = dup(STDOUT_FILENO); // Save the original stdout
 
             int fd = open(input_file, O_RDONLY);
-            if (fd < 0)
-            {
+            if (fd < 0) {
                 perror("Error input opening file");
                 return;
             }
             int fd2 = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd2 < 0)
-            {
+            if (fd2 < 0) {
                 perror("Error opening output file");
                 return;
             }
@@ -277,9 +229,7 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
             close(fd4);
             exit(0);
         }
-    }
-    else if (strcmp(flag, "32") == 0)
-    {
+    } else if (strcmp(flag, "32") == 0) {
         // Case 32: a < b >> c
         char *token = strtok(command, "<");
         char *executable = token;
@@ -299,27 +249,21 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
 
         pid_t pid = fork();
 
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("Forking error");
             exit(1);
-        }
-
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             // Child process
             int original_stdin = dup(STDIN_FILENO); // Save the original stdout
             int original_stdout = dup(STDOUT_FILENO); // Save the original stdout
 
             int fd = open(input_file, O_RDONLY);
-            if (fd < 0)
-            {
+            if (fd < 0) {
                 perror("Error input opening file");
                 return;
             }
             int fd2 = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd2 < 0)
-            {
+            if (fd2 < 0) {
                 perror("Error opening output file");
                 return;
             }
@@ -341,9 +285,7 @@ void execute_command_hasio(char *command, int background, char *home_directory, 
             close(fd4);
             exit(0);
         }
-    }
-    else
-    {
+    } else {
         fprintf(stderr, "Invalid use of IO Redirection\n");
         return;
     }

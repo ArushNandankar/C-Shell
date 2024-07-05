@@ -5,30 +5,22 @@
 // extern char last_directory[256];
 // extern char last_directory_temp[256];
 
-void print_entry(const char *name, mode_t mode)
-{
-    if (S_ISDIR(mode))
-    {
+void print_entry(const char *name, mode_t mode) {
+    if (S_ISDIR(mode)) {
         printf(COLOR_BLUE "%s\n" COLOR_RESET, name);
         // printf(" <<Directory>>\n");
-    }
-    else if (mode & S_IXUSR || mode & S_IXGRP || mode & S_IXOTH)
-    {
+    }  else if (mode & S_IXUSR || mode & S_IXGRP || mode & S_IXOTH) {
         printf(COLOR_GREEN "%s\n" COLOR_RESET, name);
         // printf(" <<Executable>>\n");
-    }
-    else
-    {
+    } else {
         printf(COLOR_WHITE "%s\n" COLOR_RESET, name);
         // printf(" <<File>>\n");
     }
 }
 
-void print_info(const char *path, const char *name, mode_t mode)
-{
+void print_info(const char *path, const char *name, mode_t mode) {
     struct stat fileStat;
-    if (stat(path, &fileStat) < 0)
-    {
+    if (stat(path, &fileStat) < 0) {
         perror("stat");
         return;
     }
@@ -63,43 +55,34 @@ void print_info(const char *path, const char *name, mode_t mode)
    print_entry(name, mode);
 }
 
-void execute_peek(const char *path, int show_hidden, int show_info, char *home_directory, char *last_directory)
-{
+void execute_peek(const char *path, int show_hidden, int show_info, char *home_directory, char *last_directory) {
     DIR *dir;
     
-    if(strcmp(path, "-") == 0)
-    {
+    if(strcmp(path, "-") == 0) {
         // printf("about to open %s\n", last_directory);
         //dir = opendir(last_directory);
         strcpy(path, last_directory);
         execute_peek(path, show_hidden, show_info, home_directory, last_directory);
         return;
-    }
-    else if(strcmp(path, "~") == 0)
-    {
+    } else if(strcmp(path, "~") == 0) {
         // printf("about to open %s\n", home_directory);
         //dir = opendir(home_directory);
         strcpy(path, home_directory);
         execute_peek(path, show_hidden, show_info, home_directory, last_directory);
         return;
-    }
-    else
-    {
+    } else {
         // printf("about to open %s\n", path);
         dir = opendir(path);
     }
 
-    if (dir == NULL)
-    {
+    if (dir == NULL) {
         perror("opendir");
         return;
     }
 
     struct dirent *entry;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (!show_hidden && entry->d_name[0] == '.')
-        {
+    while ((entry = readdir(dir)) != NULL) {
+        if (!show_hidden && entry->d_name[0] == '.') {
             continue;
         }
 
@@ -107,18 +90,14 @@ void execute_peek(const char *path, int show_hidden, int show_info, char *home_d
         snprintf(full_path, 256, "%s/%s", path, entry->d_name);
 
         struct stat file_info;
-        if (stat(full_path, &file_info) == -1)
-        {
+        if (stat(full_path, &file_info) == -1) {
             perror("stat");
             continue;
         }
 
-        if (show_info)
-        {
+        if (show_info) {
             print_info(full_path, entry->d_name, file_info.st_mode);
-        }
-        else
-        {
+        } else {
             print_entry(entry->d_name, file_info.st_mode);
         }
     }

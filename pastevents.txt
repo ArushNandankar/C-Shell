@@ -34,3 +34,30 @@ clear
 peek
 ls
 clear
+ls
+clear
+peek
+ls
+clear
+mkdir test1
+warp test1
+ls
+peek
+touch file1
+peek
+mkdir test2
+peek
+chmod +x file1
+peek
+ls
+clear
+sleep 5
+sleep 5 &
+clear
+ls
+clea
+clear
+ls
+clear
+ls
+clear

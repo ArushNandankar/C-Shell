@@ -41,7 +41,7 @@ int main() {
     char promptS[256] = "";
 
     if (getcwd(home_directory, sizeof(char) * 256) != NULL) {
-        fprintf(logFile, "Shell Spwanned in Dir: %s", home_directory);
+        fprintf(logFile, "Shell Spawned in Dir: %s\n", home_directory);
         fflush(logFile);
     } else {
         perror("getcwd() error");

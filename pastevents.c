@@ -1,13 +1,11 @@
 #include "headers.h"
 
 // function to print last 15 commands from pastevents.txt
-void execute_pastevents(char *homedirectory)
-{
+void execute_pastevents(char *homedirectory) {
     char *path = malloc(sizeof(char) * 256);
     sprintf(path, "%s/pastevents.txt", homedirectory);
     int fd = open(path, O_RDONLY);
-    if (fd == -1)
-    {
+    if (fd == -1) {
         perror("Error opening file");
         exit(1);
     }
@@ -15,27 +13,22 @@ void execute_pastevents(char *homedirectory)
     // calculate number of lines in file
     int line_count = 0;
     char c;
-    while (read(fd, &c, 1) != 0)
-    {
-        if (c == '\n')
-        {
+    while (read(fd, &c, 1) != 0) {
+        if (c == '\n') {
             line_count++;
         }
     }
     close(fd);
 
-    if (line_count < 15)
-    {
+    if (line_count < 15) {
         fd = open(path, O_RDONLY);
-        if (fd == -1)
-        {
+        if (fd == -1) {
             perror("Error opening file");
             exit(1);
         }
         char buffer[256];
         int bytes_read = read(fd, buffer, 256);
-        if (bytes_read == -1)
-        {
+        if (bytes_read == -1) {
             perror("Error reading file");
             exit(1);
         }
@@ -45,8 +38,7 @@ void execute_pastevents(char *homedirectory)
     }
 
     fd = open(path, O_RDONLY);
-    if (fd == -1)
-    {
+    if (fd == -1) {
         perror("Error opening file");
         exit(1);
     }
@@ -57,26 +49,21 @@ void execute_pastevents(char *homedirectory)
     char buffer[256];
     int newline_count = 0;
 
-    while (offset > 0 && lines_printed < 15)
-    {
+    while (offset > 0 && lines_printed < 15) {
         off_t read_size = (offset > 256) ? 256 : offset;
         offset -= read_size;
 
         lseek(fd, offset, SEEK_SET);
         ssize_t bytes_read = read(fd, buffer, read_size);
-        if (bytes_read == -1)
-        {
+        if (bytes_read == -1) {
             perror("Error reading file");
             exit(1);
         }
 
-        for (ssize_t i = bytes_read - 1; i >= 0; i--)
-        {
-            if (buffer[i] == '\n')
-            {
+        for (ssize_t i = bytes_read - 1; i >= 0; i--) {
+            if (buffer[i] == '\n') {
                 newline_count++;
-                if (newline_count >= 15)
-                {
+                if (newline_count >= 15) {
                     write(STDOUT_FILENO, buffer + i + 1, bytes_read - i - 1);
                     lines_printed = 15;
                     break;
@@ -87,8 +74,7 @@ void execute_pastevents(char *homedirectory)
     close(fd);
 }
 
-char *loadNthLineFromEnd(const char *homedirectory, int n)
-{
+char *loadNthLineFromEnd(const char *homedirectory, int n) {
     char filename[256];
     sprintf(filename, "%s/pastevents.txt", homedirectory);
     int fd = open(filename, O_RDONLY);
