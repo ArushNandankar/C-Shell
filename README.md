@@ -23,7 +23,7 @@ List files and directories
 - `pastevents purge`: Clear history
 - `pastevents execute <index>`: Execute command from history
 
-### proclore
+### `proclore <pid>`
 Display process information
 
 ### seek
@@ -33,10 +33,10 @@ Search for files/directories
 ### activities
 List running processes spawned by the shell
 
-### ping <pid> <signal_number>
+### `ping <pid> <signal_number>`
 Send signals to processes
 
-### fg <pid> / bg <pid>
+### `fg <pid> / bg <pid>`
 Manage background processes
 
 ## 3. I/O Redirection
